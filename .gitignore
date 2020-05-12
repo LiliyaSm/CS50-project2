@@ -1,0 +1,10 @@
+## ignore local settings file
+settings.py
+## local flask sessions
+flask_session/*
+## vs code configs
+.vscode/*
+## python cache
+__pycache__/*
+## npm packages
+node_modules/*
