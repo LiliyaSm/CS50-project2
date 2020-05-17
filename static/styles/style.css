@@ -1,0 +1,89 @@
+@charset "UTF-8";
+body {
+  font-family: "Tahoma", sans-serif;
+  min-height: 100vh;
+  background-color: #CFF09E;
+  color: #031634; }
+
+.hide {
+  display: none; }
+
+.wrap-header {
+  max-width: 1024px;
+  margin: 0 auto; }
+
+.wrap-main {
+  max-width: 824px;
+  margin: 0 auto; }
+
+.wrap-main {
+  padding: 2% 0; }
+
+.site-header {
+  background-color: #3B8686;
+  padding-bottom: 18px;
+  padding-top: 18px;
+  font-weight: bold; }
+  .site-header a {
+    color: #253234;
+    text-align: right; }
+  .site-header img {
+    border-radius: 50%; }
+
+.logout a:hover {
+  color: #85dce8; }
+
+.site-title {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 0;
+  line-height: 1.7;
+  text-align: left; }
+
+.nav-item {
+  text-align: right; }
+
+.greeting a {
+  pointer-events: none; }
+
+.site-title,
+.site-title a:hover {
+  color: #CFF09E;
+  text-decoration: none;
+  font-style: italic; }
+
+.form-inline .form-control.create {
+  width: 750px; }
+
+.btn-join {
+  color: #fff;
+  background-color: #3B8686;
+  border-color: #3B8686;
+  float: right; }
+
+.cards {
+  max-width: 824px;
+  margin: 0 auto; }
+
+.card-b {
+  flex: 1 1 auto;
+  padding: 0.5rem; }
+
+.message-field {
+  width: 800px;
+  height: 550px;
+  background: #fff;
+  /* цвет фона, белый */
+  border: 1px solid #C1C1C1;
+  overflow: auto;
+  /* свойство для прокрутки по горизонтали. Автоматом, если больше блока */ }
+
+.chat li {
+  margin: 15px 0; }
+
+.chat {
+  list-style: none;
+  margin: 0;
+  padding: 8px; }

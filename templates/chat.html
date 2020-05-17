@@ -1,0 +1,59 @@
+{% extends "layout.html" %} {% block body %}
+
+<script id="result" type="text/template">
+  {% raw %}
+  <li>   
+    <div class="chat-body">
+            <div class="header">
+              <strong>{{ values.username }}</strong>
+              <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> {{ values.time }}</small>
+            </div>
+            <p>
+              {{ values.message }}
+            </p>
+      </div>    
+
+  </li>
+    {% endraw %}
+</script>
+
+<div class= "message-field ">
+
+  <ul class="chat">
+    {% if messages %} {% for message in messages %}
+    <li>   
+      <div class="chat-body">
+            <div class="header">
+              <strong>{{message["username"]}}</strong>
+              <small class="pull-right text-muted"><i class="fa fa-clock-o"></i>{{message["time"]}}</small>
+            </div>
+            <p>
+              {{message["message"]}}
+            </p>
+      </div>
+    </li>
+    {% endfor %} {% else %}
+    <h4 class="no-msg">no messages yet!</h4>
+    {% endif %}
+    
+  </ul>
+</div>    
+
+<div class="mb-5 row justify-content-center">
+  <form class="form-inline" id="message" method="POST">
+    <input
+      type="text"
+      class="create form-control m-2"
+      name="message"
+      placeholder="Enter message here"
+      aria-label="message"
+      required="required"
+      autocomplete="off"
+    />
+    <button class="btn btn-outline-success" type="submit">
+      Send
+    </button>
+  </form>
+</div>
+
+{% endblock %}
