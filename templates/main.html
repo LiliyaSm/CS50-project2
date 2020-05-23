@@ -1,44 +1,31 @@
 {% extends "layout.html" %} {% block body %}
-<div class="cards">
-  <div
-    class="alert alert-danger alert-dismissible fade show hide"
-    id="chat-alert"
-    role="alert"
-  >
-    <strong>Holy guacamole!</strong> It seems we already have this name!
-    
-    <button type="button" class="close" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
 
-  <h4 class="text-center mb-3">Create your own chat</h4>
-  <div class="mb-5 row justify-content-center">
-    <form class="form-inline" id="create" method="POST">
-      <input
+<h4 class="text-center mb-3">Create your own chat</h4>
+    <form class="form-inline mb-5" id="create" method="POST">
+        <input
         type="text"
-        class="create form-control m-2"
-        name="create"
+        class="create form-control mr-2 m-sm-2"
+        name="chatname"
         placeholder="Enter chat name"
         aria-label="create"
         required="required"
         autocomplete="off"
-      />
-      <button class="btn btn-outline-success" type="submit">
-        Create
-      </button>
+        />
+        <button class="btn btn-join" type="submit">
+            Create
+        </button>
     </form>
-  </div>
-  <h4 class="text-center mb-3">...or choose from existing:</h4>
-
+    
+    <h4 class="text-center mb-3">...or choose from existing:</h4>
+    
   {% for chat in chat_list %}
   <div class="card mb-3">
-    <div class="card-b">
-      <h4><strong>{{chat["chatname"]}}</strong></h4>
-      creator: {{chat["username"]}}
-      <a
-        href="{{ url_for('chat', chatname=chat['chatname']  ) }}"
-        class="btn btn-join"
+      <div class="card-b">
+          <h4><strong>{{chat["chatname"]}}</strong></h4>
+          creator: {{chat["username"]}}
+          <a
+        href="{{ url_for('chat', chatname=chat['chatname'] )}}"
+        class="btn btn-join pull-right"
         >Join</a
       >
     </div>
@@ -52,11 +39,37 @@
 <!-- 
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="{{ url_for('static', filename='index.js') }}"></script>
-    <title>Converter</title>
-  </head>
-  <body>
-    <div>fffffffffffff</div>
-  </body>
-</html> -->
+    <head>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <title>Converter</title>
+    </head>
+    <body>
+        <div>fffffffffffff</div>
+    </body>
+    </html> -->
+    
+    <!-- <div
+      class="alert alert-danger alert-dismissible fade show hide"
+      id="chat-name-alert"
+      role="alert"
+    >
+      <strong
+        >Name must be between 1 to 50 characters, contain Latin letters, digits or spaces</strong
+      >
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    <div class="cards">
+      <div
+        class="alert alert-danger alert-dismissible fade show hide"
+        id="chat-alert"
+        role="alert"
+      >
+        <strong>Holy guacamole!</strong> It seems we already have this name!
+        
+        <button type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> -->

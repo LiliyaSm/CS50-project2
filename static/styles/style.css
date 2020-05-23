@@ -2,36 +2,25 @@
 body {
   font-family: "Tahoma", sans-serif;
   min-height: 100vh;
-  background-color: #CFF09E;
-  color: #031634; }
+  background-color: #CFF09E; }
 
 .hide {
   display: none; }
 
 .wrap-header {
-  max-width: 1024px;
+  max-width: 924px;
   margin: 0 auto; }
 
 .wrap-main {
   max-width: 824px;
-  margin: 0 auto; }
-
-.wrap-main {
-  padding: 2% 0; }
+  margin: 0 auto;
+  padding: 2%; }
 
 .site-header {
   background-color: #3B8686;
-  padding-bottom: 18px;
-  padding-top: 18px;
   font-weight: bold; }
-  .site-header a {
-    color: #253234;
-    text-align: right; }
   .site-header img {
     border-radius: 50%; }
-
-.logout a:hover {
-  color: #85dce8; }
 
 .site-title {
   font-size: 24px;
@@ -45,17 +34,11 @@ body {
 .nav-item {
   text-align: right; }
 
-.greeting a {
-  pointer-events: none; }
-
-.site-title,
-.site-title a:hover {
-  color: #CFF09E;
-  text-decoration: none;
-  font-style: italic; }
-
 .form-inline .form-control.create {
-  width: 750px; }
+  flex: 2; }
+
+.form-group .form-control.username {
+  flex: 2; }
 
 .btn-join {
   color: #fff;
@@ -72,13 +55,15 @@ body {
   padding: 0.5rem; }
 
 .message-field {
-  width: 800px;
-  height: 550px;
   background: #fff;
-  /* цвет фона, белый */
   border: 1px solid #C1C1C1;
   overflow: auto;
-  /* свойство для прокрутки по горизонтали. Автоматом, если больше блока */ }
+  /* свойство для прокрутки по горизонтали. Автоматом, если больше блока */
+  height: 550px;
+  border-radius: 5px; }
+
+.message-group {
+  width: 100%; }
 
 .chat li {
   margin: 15px 0; }
@@ -87,3 +72,20 @@ body {
   list-style: none;
   margin: 0;
   padding: 8px; }
+
+/* Solid Button */
+.back {
+  margin: 0 auto;
+  color: #1c5169;
+  background-color: #86dbff;
+  -webkit-transition: .3s all ease-in;
+  transition: .3s all ease-in;
+  border: 2px solid transparent; }
+
+.back:hover, .back:focus {
+  -webkit-box-shadow: 0px 0px 20px 15px #3cc6d8;
+  box-shadow: 0px 0px 30px 20px #3cc6d8;
+  background-color: #d7f3ff; }
+
+.chat-btn {
+  text-align: center; }
