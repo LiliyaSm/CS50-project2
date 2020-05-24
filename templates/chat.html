@@ -24,22 +24,7 @@
 <div class = "message-group">
   <div class= "message-field mb-2">
     <ul class="chat">
-      {% if messages %} {% for message in messages %}
-      <li>   
-        <div class="msg-body">
-              <div class="header">
-                <strong>{{message["username"]}}</strong>
-                <small class="pull-right text-muted"><i class="fa fa-clock-o"></i>{{message["time"]}}</small>
-              </div>
-              <p>
-                {{message["message"]}}
-              </p>
-        </div>
-      </li>
-      {% endfor %} 
-      {% endif %}
-      <h4 class="no-msg text-center hide">no messages yet!</h4>
-      
+        <h4 class="no-msg text-center hide">no messages yet!</h4>      
     </ul>
   </div>    
   
