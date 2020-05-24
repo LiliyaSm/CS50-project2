@@ -9,18 +9,26 @@
   {% raw %}
   <li>   
     <div class="chat-body">
-            <div class="header">
+        <div class="header">
+            {{#if values.delete}}
+    
+            <button type="button" class="close ml-2" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+    
+            {{/if}}
               <strong>{{ values.username }}</strong>
               <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> {{ values.time }}</small>
             </div>
             <p>
               {{ values.message }}
             </p>
+
       </div>    
   </li>
     {% endraw %}
 </script>
-<div class = "chat-btn"><button class ="back"> <a href="{{ url_for('main', username = session['username'])  }}" class="back" >Leave this chat and go to chat list</a> </button></div>
+<div class = "chat-btn mb-2"><button class ="back"> <a href="{{ url_for('main', username = session['username'])  }}" class="back" >Leave this chat and go to chat list</a> </button></div>
 <div class = "message-group">
   <div class= "message-field mb-2">
     <ul class="chat">

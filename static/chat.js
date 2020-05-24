@@ -1,6 +1,5 @@
 // Start with first post.
 let counter = 0;
-
 // Load posts 10 at a time.
 const quantity = 10;
 
@@ -64,11 +63,12 @@ document.addEventListener(
 
             var needToScroll = false;
             msg.data.forEach((element) => {
-              add_post(element);
-              //scroll only if message is yours
-              if (element.username == username) {
-                needToScroll = true;
-              }
+                //scroll only if message is yours
+                if (element.username == username) {
+                    needToScroll = true;
+                    element.delete = true;
+                }
+                add_post(element);
             });
 
             if (needToScroll || msg.forceScroll) {
@@ -78,6 +78,29 @@ document.addEventListener(
                 ".message-field"
               ).scrollHeight;
             }
+          });
+          
+          // handle scrolling event from server
+          socket.on("scrolling", (messages) => {
+            if (messages.data) {
+              messages.data.forEach(add_post_end);
+            }
+
+            //detecting last scrolling
+            if (!messages.data || messages.data.length < 10) {
+              // если последние 10??
+              document
+                .querySelector(".message-field")
+                .removeEventListener("scroll", scroll);
+              end_message();
+            }
+            // return scroll to the initial place
+            const lastScrollHeight = localStorage.getItem("lastScrollHeight");
+            var scrollDiff =
+              document.querySelector(".message-field").scrollHeight -
+              lastScrollHeight;
+            document.querySelector(".message-field").scrollTop += scrollDiff;
+
           });
 
           document
@@ -107,27 +130,6 @@ document.addEventListener(
             };
 
             socket.emit("load_msgs", counter);
-            socket.on("scrolling", (messages) => {
-
-                if(messages.data){
-                    messages.data.forEach(add_post_end);
-                }
-
-              //detecting last scrolling
-              if (messages.data.length < 10 || !messages.data) {
-                // если последние 10??
-                end_message();
-                document
-                  .querySelector(".message-field")
-                  .removeEventListener("scroll", scroll);
-              }
-
-              // return scroll to the place before loading
-              var scrollDiff =
-                document.querySelector(".message-field").scrollHeight -
-                lastScrollHeight;
-              document.querySelector(".message-field").scrollTop += scrollDiff;
-            });
           }
 
           function add_post(data) {
@@ -171,40 +173,10 @@ document.addEventListener(
 
             if (event.target.scrollTop === 0) {
               // store initial place of scroll
-              var lastScrollHeight = event.target.scrollHeight;
-              load(lastScrollHeight);
+                var lastScrollHeight = event.target.scrollHeight;
+                localStorage.setItem("lastScrollHeight", lastScrollHeight);
+
+                load(lastScrollHeight);
             }
           }
         });
-
-  // Open new request to get new msgs.
-//   const request = new XMLHttpRequest();
-//   request.open("POST", "/load_msgs");
-//   request.onload = () => {
-//     const data = JSON.parse(request.responseText);
-
-//     data.forEach(add_post_end);
-
-//     //detecting last scrolling
-//     if (data.length < 10) {
-//       end_message();
-//       document
-//         .querySelector(".message-field")
-//         .removeEventListener("scroll", scroll);
-//     }
-
-//     // return scroll to the place before loading
-//     var scrollDiff =
-//       document.querySelector(".message-field").scrollHeight - lastScrollHeight;
-//     document.querySelector(".message-field").scrollTop += scrollDiff;
-//   };
-
-//   let params = new URLSearchParams(location.search);
-//   const chatname = params.get("chatname");
-//   // Add start and end points to request data.
-//   const data = new FormData();
-//   data.append("start", start);
-//   data.append("end", end);
-//   data.append("chatname", chatname);
-//   // Send request.
-//   request.send(data);
