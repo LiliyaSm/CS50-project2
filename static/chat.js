@@ -63,7 +63,7 @@ document.addEventListener(
 
             var needToScroll = false;
             msg.data.forEach((element) => {
-                //scroll only if message is yours
+                //if message is yours scroll and add close button
                 if (element.username == username) {
                     needToScroll = true;
                     element.delete = true;
@@ -101,6 +101,15 @@ document.addEventListener(
               lastScrollHeight;
             document.querySelector(".message-field").scrollTop += scrollDiff;
 
+          });
+          socket.on("delete message", (data) => {
+            element = document.querySelector(`[data-id = "${data.messageId}"]`);
+            // console.log(`[data-id = "${data.messageId}"]`);
+            // console.log(element);
+            element.style.animationPlayState = "running";
+            element.addEventListener("animationend", () => {
+                element.closest(".chat-body").remove();
+                });
           });
 
           document
@@ -178,5 +187,20 @@ document.addEventListener(
 
                 load(lastScrollHeight);
             }
-          }
-        });
+          };
+
+            document.addEventListener("click", (event) => {
+              const element = event.target;              
+              if (element.className === "close") {
+              const li = element.closest(".chat-body");
+              const messageId = li.dataset.id
+                info = {
+                    chatname: chatname,
+                    username: username,
+                    messageId: messageId,
+                };
+              socket.emit("delete message", info);
+            };
+
+        })
+    })

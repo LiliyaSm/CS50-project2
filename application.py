@@ -14,12 +14,16 @@ socketio = SocketIO(app)
 global chat_list
 chat_list = []
 
-#{'chatname': [{'username': 'emma', 'message': 'hello', 'time': '5/21/2020, 11:50:57 AM'}, {}}
+#{'chatname': [{'username': 'emma', 'message': 'hello', 'time': '5/21/2020, 11:50:57 AM'}, {}]}
 global messages_list
 messages_list = {}
 
 global users
 users = []
+
+# unique id for every message
+global message_id
+message_id = 0
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -108,7 +112,7 @@ def load_msgs(data):
     start = data["start"]
     end = data["end"]
     chatname = data["chatname"] 
-
+    
     # Generate list of msgs
     try:
         messages = list(reversed(messages_list.get(chatname)))
@@ -147,10 +151,17 @@ def add_msg(data):
 
     """ Add new messages to storage and return with username """
 
+    global message_id
     chatname = data["chatname"]
     info = {"username": session["username"],
             "message": data["message"], 
-            "time": data["time"]}
+            "time": data["time"],
+            "message_id": message_id
+            }
+
+    #add additional info to data
+    data["message_id"] = message_id
+    data["username"] = session["username"]
 
     if chatname in messages_list:
         messages_list[chatname].append(info)
@@ -160,6 +171,25 @@ def add_msg(data):
         print(messages_list)
     else:
         messages_list[chatname] = [info]
-    data["username"] = session["username"]
+    message_id = message_id + 1
 
-    emit("add message", {"data": [data]}, room=chatname  , broadcast=True)
+    emit("add message", {"data": [data]}, room=chatname, broadcast=True)
+
+
+@socketio.on("delete message")
+def del_message(data):
+    chatname = data["chatname"]
+    messageId = int(data["messageId"])
+    username = data["username"]
+
+    msg_to_del = [x for x in messages_list[chatname]
+                  if (x['message_id'] == messageId and x['username'] == username)]
+
+    print(msg_to_del)
+    messages_list[chatname].remove(msg_to_del[0])
+    print(messages_list[chatname])
+    #rewrite list without message
+    # messages_list[chatname] = [new_info]
+    #check authorship
+    emit("delete message", {"messageId": messageId}, room=chatname)
+    

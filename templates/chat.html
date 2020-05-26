@@ -7,24 +7,22 @@
 
 <script id="result" type="text/template">
   {% raw %}
-  <li>   
-    <div class="chat-body">
+  <li data-id = {{ values.message_id }} class="chat-body">   
         <div class="header">
             {{#if values.delete}}
     
             <button type="button" class="close ml-2" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span class="close" aria-hidden="true">&times;</span>
             </button>
     
             {{/if}}
               <strong>{{ values.username }}</strong>
               <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> {{ values.time }}</small>
-            </div>
+        </div>
             <p>
               {{ values.message }}
             </p>
 
-      </div>    
   </li>
     {% endraw %}
 </script>
