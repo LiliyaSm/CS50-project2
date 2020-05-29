@@ -1,15 +1,9 @@
 {% extends "layout.html" %} {% block body %}
 
-<!-- 
-        <form id="form">
-            <input id="username" autocomplete="off" autofocus type="text">
-            <input type="submit" value="go">
-        </form> -->
-
 <div class="row justify-content-center">
   <form class="col-lg-6" id="form" method="POST">
     <div class="form-group">
-      <label for="username">Username</label>
+      <label for="username">Enter your name to start chatting</label>
       <input
         type="text"
         class="form-control username"
@@ -19,7 +13,7 @@
         autocomplete="off"
       />
     </div>
-    <button type="submit" class="btn btn-primary">Log In</button>
+    <button type="submit" class="btn btn-join">Log In</button>
   </form>
 </div>
 {% endblock %}

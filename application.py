@@ -3,6 +3,7 @@ import time
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from loginRequired import login_required
+import re
 
 
 app = Flask(__name__)
@@ -18,6 +19,7 @@ chat_list = []
 global messages_list
 messages_list = {}
 
+#list of users
 global users
 users = []
 
@@ -28,7 +30,7 @@ message_id = 0
 
 @app.route("/", methods=["POST", "GET"])
 def index():
-    """ initial page with login fields """
+    """ Initial page with login fields """
     
     if 'username' in session:
         return redirect(url_for("main", username=session["username"]))
@@ -40,12 +42,12 @@ def index():
             flash('Name can not be empty!', 'danger')
             return render_template("index.html")
 
-        #check if unique
+        #check if this user is already on server
         if username in users:
-            # add to session and redirect to search page
             flash('We already have such name', 'danger')
             return render_template("index.html")
         else:
+            # add to session and redirect to search page
             session["username"] = username.strip()
             users.append(username.strip())
             return redirect(url_for("main", username=session["username"]))
@@ -71,7 +73,11 @@ def logout():
 
 @app.route("/main/<string:username>", methods=["GET", "POST"])
 @login_required
+
 def main(username):
+
+    """ Render main page with chat list"""
+
     if request.method == "POST":
         chatname = request.form.get("chatname")
         if not (chatname and chatname.strip()):
@@ -80,34 +86,37 @@ def main(username):
         
         #check if unique
         for chat in chat_list:
-            if chat["chatname"] == chatname:
+            if chat["chatname"].lower() == chatname.lower():
                 #check if duplicate of an existing chat
-                flash('We already have this chatname! Please, Choose another one', 'danger')
+                flash('We already have this chatname! Please, choose another one', 'danger')
                 return render_template("main.html", chat_list=chat_list)
 
-        else:
-        # add to the list and redirect to search page
+        pattern = r'^[a-z0-9 ]{1,16}$'
+        if re.match(pattern, chatname, re.IGNORECASE):
+        # add to the list and redirect to chat page
             chat_list.append({"username": username, "chatname": chatname.strip()})
             return redirect(url_for("chat", chatname=chatname))
-
+        else:
+            flash(
+                'Chat name must be between 1 to 16 characters, contain only Latin letters, digits and spaces', 'danger')
+            return render_template("main.html", chat_list=chat_list)
     return render_template("main.html", chat_list=chat_list)
 
 
-@app.route("/chat", methods=["GET", "POST"])
+@app.route("/chat/<string:chatname>", methods=["GET", "POST"])
 @login_required
 
-
-def chat():
+def chat(chatname):
 
     """ Render chat page """
 
-    return render_template("chat.html", username = session["username"])
+    return render_template("chat.html", username=session["username"], chatname=chatname)
 
 
 @socketio.on('load_msgs')
 def load_msgs(data):
 
-    """ Load new messages after scrolling """
+    """ Load old messages after scrolling """
 
     start = data["start"]
     end = data["end"]
@@ -121,7 +130,6 @@ def load_msgs(data):
         print(e)
         msgs = None
 
-
     # Artificially delay speed of response.
     time.sleep(1)
 
@@ -132,7 +140,7 @@ def load_msgs(data):
 @socketio.on('joined')
 def joined(data):
 
-    """ Load last 10 messages after loading chat room """
+    """ Load last 10 messages after entering a chat room """
 
     chatname = data["chatname"]
     room = chatname
@@ -178,18 +186,20 @@ def add_msg(data):
 
 @socketio.on("delete message")
 def del_message(data):
+
+    """ Delete message from list """
+
     chatname = data["chatname"]
     messageId = int(data["messageId"])
     username = data["username"]
 
+    #find message by author and id
     msg_to_del = [x for x in messages_list[chatname]
                   if (x['message_id'] == messageId and x['username'] == username)]
 
     print(msg_to_del)
     messages_list[chatname].remove(msg_to_del[0])
     print(messages_list[chatname])
-    #rewrite list without message
-    # messages_list[chatname] = [new_info]
-    #check authorship
+
     emit("delete message", {"messageId": messageId}, room=chatname)
     

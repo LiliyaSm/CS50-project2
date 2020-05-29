@@ -29,19 +29,20 @@
     <title>Flack</title>
   </head>
   <body>
-    <header class="site-header">
-        
+    <header class="site-header">        
       <div class="wrap-header">
 
-
         <nav class="navbar navbar-expand-lg navbar-light">
-            <img class="mr-3"
-                src="{{ url_for('static', filename = 'styles/images/guacamole.jpg')}}"
-                alt="guacamole"
-                height="50"
-                width="50"
-              />
-        <span class="site-title ">Flack</span>
+           
+            <div class="site-title">
+                <img class="mr-3"
+                    src="{{ url_for('static', filename = 'styles/images/guacamole.jpg')}}"
+                    alt="guacamole"
+                    height="50"
+                    width="50"
+                  />
+            <span >Flack</span>
+            </div>
 
         {% if session["username"] %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent12" aria-controls="navbarSupportedContent12" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +58,6 @@
         </div>
       {% endif %} 
 
-
         </nav>
        
       </div>
@@ -67,7 +67,6 @@
       {% if messages %} 
       {% for category, message in messages %}
 
-      <div class="alert alert-" role="alert"></div>
       <div
         class="alert text-center alert-{{category}} alert-dismissible fade show"
         id="chat-alert"
@@ -75,7 +74,7 @@
       >
         {{ message }}
 
-        <button type="button" class="close" aria-label="Close">
+        <button type="button"  class="close"  aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -105,32 +104,3 @@
     ></script>
   </body>
 </html>
-
-<!-- 
- <ul class="nav nav-fill">
-          <li class="nav-item col-lg-4 site-title">
-            <a href="{{ url_for('index') }}">
-              <img
-                src="{{ url_for('static', filename = 'styles/images/guacamole.jpg')}}"
-                alt="guacamole"
-                height="50"
-                width="50"
-              />
-              Flack
-            </a>
-          </li>
-
-          {% if session["username"] %}
-
-          <li class="nav-item greeting">
-            <a class="nav-link" href="#"> Hello, {{session["username"]}}</a>
-          </li>
-          <li class="nav-item col-lg-2 col-md-2">
-            <a class="nav-link logout" href="{{ url_for('logout') }}"
-              >Log out</a
-            >
-          </li>
-          {% endif %}
-
-
-        </ul> -->

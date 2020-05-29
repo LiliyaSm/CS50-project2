@@ -1,206 +1,195 @@
-// Start with first post.
+// Start with first message.
 let counter = 0;
-// Load posts 10 at a time.
+// Load messages 10 at a time.
 const quantity = 10;
 
-const username = localStorage.getItem("username");
-//get chat name from URL
-let params = new URLSearchParams(location.search);
-const chatname = params.get("chatname");
+document.addEventListener("DOMContentLoaded", () => {
+    const username = localStorage.getItem("username");
+    const chatname = localStorage.getItem("lastChat");
 
+    // Connect to websocket
+    var socket = io.connect(
+        location.protocol + "//" + document.domain + ":" + location.port
+    );
 
-//save current chat for future sessions
-localStorage.setItem("lastChat", chatname);
+    // When connected to websocket
+    socket.on("connect", () => {
+        //load first 10 messages
+        socket.emit("joined", { chatname: chatname });
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-          // after loading scroll to the bottom
-          // document.querySelector(".message-field").scrollTop = document.querySelector(
-          //   ".message-field"
-          // ).scrollHeight;
+        document.querySelector("#message").onsubmit = () => {
+        const message = document.querySelector(
+            "#message textarea[name='message']"
+        ).value;
+        const time = new Date().toLocaleString(); // 11/16/2015, 11:18:48 PM
 
-          // Connect to websocket
-          var socket = io.connect(
-            location.protocol + "//" + document.domain + ":" + location.port
-          );
+        const info = {
+            message: message,
+            time: time,
+            chatname: chatname,
+        };
 
-          // When connected to websocket
-          socket.on("connect", () => {
-            //load first 10 messages
-            socket.emit("joined", { chatname: chatname });
+        socket.emit("submit message", info);
+        document.querySelector("#message textarea[name='message']").value = "";
+        //prevent default reloading
+        return false;
+        };
+    });
 
-            document.querySelector("#message").onsubmit = () => {
-              const message = document.querySelector(
-                "#message textarea[name='message']"
-              ).value;
-              const time = new Date().toLocaleString(); // 11/16/2015, 11:18:48 PM
+    // When a message is announced, add to the list
+    socket.on("add message", (msg) => {
+        if (!msg.data) {
+        document.querySelector(".no-msg").classList.remove("hide");
+        return;
+        }
+        if (!document.querySelector(".no-msg").classList.contains("hide")) {
+        document.querySelector(".no-msg").classList.add("hide");
+        }
 
-              const info = {
-                message: message,
-                time: time,
-                chatname: chatname,
-              };
+        var needToScroll = false;
+        msg.data.forEach((element) => {
+        //add scroll flag and add close button
+        if (element.username == username) {
+            needToScroll = true;
+            element.delete = true;
+        }
+        add_post(element);
+        });
 
-              socket.emit("submit message", info);
-              document.querySelector(
-                "#message textarea[name='message']"
-              ).value = "";
-              //prevent default reloading
-              return false;
-            };
-          });
+        // scroll to the bottom after first loading or if message is yours
+        if (needToScroll || msg.forceScroll) {
+        document.querySelector(
+            ".message-field"
+        ).scrollTop = document.querySelector(".message-field").scrollHeight;
+        }
+    });
 
-          // When a new message is announced, add to the list
-          socket.on("add message", (msg) => {
-            if (!msg.data) {
-              document.querySelector(".no-msg").classList.remove("hide");
-              return;
+    // handle scrolling old 10 messages event
+    socket.on("scrolling", (messages) => {
+        if (messages.data) {
+        messages.data.forEach((element) => {
+            if (element.username == username) {
+            element.delete = true;
             }
-            if (!document.querySelector(".no-msg").classList.contains("hide")) {
-              document.querySelector(".no-msg").classList.add("hide");
-            }
+            add_post_end(element);
+        });
+        }
 
-            var needToScroll = false;
-            msg.data.forEach((element) => {
-                //if message is yours scroll and add close button
-                if (element.username == username) {
-                    needToScroll = true;
-                    element.delete = true;
-                }
-                add_post(element);
-            });
-
-            if (needToScroll || msg.forceScroll) {
-              document.querySelector(
-                ".message-field"
-              ).scrollTop = document.querySelector(
-                ".message-field"
-              ).scrollHeight;
-            }
-          });
-          
-          // handle scrolling event from server
-          socket.on("scrolling", (messages) => {
-            if (messages.data) {
-              messages.data.forEach(add_post_end);
-            }
-
-            //detecting last scrolling
-            if (!messages.data || messages.data.length < 10) {
-              // если последние 10??
-              document
-                .querySelector(".message-field")
-                .removeEventListener("scroll", scroll);
-              end_message();
-            }
-            // return scroll to the initial place
-            const lastScrollHeight = localStorage.getItem("lastScrollHeight");
-            var scrollDiff =
-              document.querySelector(".message-field").scrollHeight -
-              lastScrollHeight;
-            document.querySelector(".message-field").scrollTop += scrollDiff;
-
-          });
-          socket.on("delete message", (data) => {
-            element = document.querySelector(`[data-id = "${data.messageId}"]`);
-            // console.log(`[data-id = "${data.messageId}"]`);
-            // console.log(element);
-            element.style.animationPlayState = "running";
-            element.addEventListener("animationend", () => {
-                element.closest(".chat-body").remove();
-                });
-          });
-
-          document
+        //detecting last scrolling
+        if (!messages.data || messages.data.length < 10) {
+        document
             .querySelector(".message-field")
-            .addEventListener("scroll", scroll, false);
+            .removeEventListener("scroll", scroll);
+        end_message();
+        }
+        // return scroll to the initial place
+        const lastScrollHeight = localStorage.getItem("lastScrollHeight");
+        var scrollDiff =
+        document.querySelector(".message-field").scrollHeight - lastScrollHeight;
+        document.querySelector(".message-field").scrollTop += scrollDiff;
+    });
 
-          document.querySelector(".logout").onclick = function () {
-            localStorage.removeItem("username");
-            localStorage.removeItem("lastChat");
-          };
+    //
+    socket.on("delete message", (data) => {
+        element = document.querySelector(`[data-id = "${data.messageId}"]`);
 
-          document.querySelector(".back").onclick = function () {
-            localStorage.removeItem("lastChat");
-          };
+        if (element) {
+        element.style.animationPlayState = "running";
+        element.addEventListener("animationend", () => {
+            element.closest(".chat-body").remove();
+        });
+        }
+    });
 
-          // Load next set of messages.
-          function load(lastScrollHeight) {
-            // Set start and end msg numbers, and update counter.
-            const start = counter;
-            const end = start + quantity - 1; // 10-19
-            counter = end + 1; //20
+    document
+        .querySelector(".message-field")
+        .addEventListener("scroll", scroll, false);
 
-            counter = {
-              start: start,
-              end: end,
-              chatname: chatname,
-            };
+    document.querySelector(".logout").onclick = function () {
+        localStorage.removeItem("username");
+        localStorage.removeItem("lastChat");
+    };
 
-            socket.emit("load_msgs", counter);
-          }
+    document.querySelector(".back").onclick = function () {
+        localStorage.removeItem("lastChat");
+        console.log(localStorage);
+    };
 
-          function add_post(data) {
-            // add new message to the div bottom
+    // Load next set of messages.
+    function load(lastScrollHeight) {
+        // Set start and end msg numbers, and update counter.
+        const start = counter;
+        const end = start + quantity - 1; // 0-9
+        counter = end + 1; // 10
 
-            const template = Handlebars.compile(
-              document.querySelector("#result").innerHTML
-            );
-            const content = template({ values: data });
-            document.querySelector(".chat").innerHTML += content;
-            // update counter because number of msgs +1
-            counter++;
-          }
+        counter = {
+        start: start,
+        end: end,
+        chatname: chatname,
+        };
 
-          function add_post_end(data) {
-            // add old messages to the top of div
+        socket.emit("load_msgs", counter);
+    }
 
-            const template = Handlebars.compile(
-              document.querySelector("#result").innerHTML
-            );
-            const content = template({ values: data });
-            document.querySelector(".chat").innerHTML =
-              content + document.querySelector(".chat").innerHTML;
-          }
+    function add_post(data) {
+        // add new message to the div bottom
 
-          function end_message() {
-            // alert that all msgs are scrolled
+        const template = Handlebars.compile(
+        document.querySelector("#result").innerHTML
+        );
+        const content = template({ values: data });
+        document.querySelector(".chat").innerHTML += content;
+        // update counter because number of msgs +1
+        counter++;
+    }
 
-            var li = document.createElement("li");
-            li.appendChild(document.createTextNode("These are all messages!"));
+    function add_post_end(data) {
+        // add old messages to the top of div
 
-            li.className = "text-center";
+        const template = Handlebars.compile(
+        document.querySelector("#result").innerHTML
+        );
+        const content = template({ values: data });
+        document.querySelector(".chat").innerHTML =
+        content + document.querySelector(".chat").innerHTML;
+    }
 
-            document
-              .querySelector(".chat")
-              .insertBefore(li, document.querySelector(".chat").firstChild);
-          }
+    function end_message() {
+        // alert that all msgs are scrolled
 
-          function scroll(event) {
-            // handler loads ner msgs
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode("These are all messages!"));
 
-            if (event.target.scrollTop === 0) {
-              // store initial place of scroll
-                var lastScrollHeight = event.target.scrollHeight;
-                localStorage.setItem("lastScrollHeight", lastScrollHeight);
+        li.className = "text-center";
 
-                load(lastScrollHeight);
-            }
-          };
+        document
+        .querySelector(".chat")
+        .insertBefore(li, document.querySelector(".chat").firstChild);
+    }
 
-            document.addEventListener("click", (event) => {
-              const element = event.target;              
-              if (element.className === "close") {
-              const li = element.closest(".chat-body");
-              const messageId = li.dataset.id
-                info = {
-                    chatname: chatname,
-                    username: username,
-                    messageId: messageId,
-                };
-              socket.emit("delete message", info);
-            };
+    function scroll(event) {
+        // handler loads ner msgs
 
-        })
-    })
+        if (event.target.scrollTop === 0) {
+        // store initial place of scroll
+        var lastScrollHeight = event.target.scrollHeight;
+        localStorage.setItem("lastScrollHeight", lastScrollHeight);
+
+        load(lastScrollHeight);
+        }
+    }
+
+    document.addEventListener("click", (event) => {
+        const element = event.target;
+        if (element.className === "close") {
+        const li = element.closest(".chat-body");
+        const messageId = li.dataset.id;
+        info = {
+            chatname: chatname,
+            username: username,
+            messageId: messageId,
+        };
+        socket.emit("delete message", info);
+        }
+    });
+});

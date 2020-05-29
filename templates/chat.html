@@ -1,8 +1,8 @@
 {% extends "layout.html" %} {% block body %}
   <script>
-    user="{{username}}"
-    localStorage.setItem("username", user) 
-    
+    localStorage.setItem("username", "{{username}}") 
+    localStorage.setItem("lastChat", "{{chatname}}") 
+    console.log(localStorage)
   </script>  
 
 <script id="result" type="text/template">
@@ -26,7 +26,10 @@
   </li>
     {% endraw %}
 </script>
-<div class = "chat-btn mb-2"><button class ="back"> <a href="{{ url_for('main', username = session['username'])  }}" class="back" >Leave this chat and go to chat list</a> </button></div>
+<div class = "chat-btn mb-2">
+    <span class="chat-title"> {{ chatname }} </span>
+    <a href="{{ url_for('main', username = session['username'])  }}" class="back btn btn-success pull-right" >Exit</a> 
+</div>
 <div class = "message-group">
   <div class= "message-field mb-2">
     <ul class="chat">
