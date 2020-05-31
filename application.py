@@ -60,7 +60,7 @@ def index():
 def logout():
     """ Logout user and delete cookie """
 
-    # Remove from list
+    # Remove from user list
     try:
         users.remove(session['username'])
     except ValueError:
@@ -149,7 +149,7 @@ def joined(data):
     messages = messages_list.get(chatname)
     if messages:
     #     #load last 10
-        messages = messages[len(messages)-10:len(messages)]
+        messages = messages[-10:]
 
     #broadcast - false because direct msg.
     emit("add message", {"data": messages, "forceScroll": True}, broadcast=False)

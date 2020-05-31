@@ -1,7 +1,5 @@
-$yellow: #CFF09E;
-$green: #3B8686;
-
-// $light-blue: #85dce8;
+$yellow: #cff09e;
+$green: #3b8686;
 
 body {
   font-family: "Tahoma", sans-serif;
@@ -13,8 +11,7 @@ body {
   display: none;
 }
 
-.wrap-header
-{
+.wrap-header {
   max-width: 924px;
   margin: 0 auto;
 }
@@ -24,7 +21,6 @@ body {
   margin: 0 auto;
   padding: 2%;
 }
-
 
 .site-header {
   background-color: $green;
@@ -47,14 +43,9 @@ body {
 }
 
 .form-inline .form-control.create,
-.form-group .form-control.username{
-      flex: 2;
+.form-group .form-control.username {
+  flex: 2;
 }
-
-.form-group .form-control.username{
-      flex: 2;
-}
-
 
 .btn-join {
   color: #fff;
@@ -67,23 +58,12 @@ body {
   margin: 0 auto;
 }
 
-
-// .card-b {
-//     flex: 1 1 auto;
-//     padding: 0.5rem
-// }
-
-
-.message-field  {
-background: #fff; 
-border: 1px solid #C1C1C1; 
-overflow: auto; /* adds scrollbars only when necessary */
-height: 550px;
-border-radius: 5px;
-}
-
-.message-group {
-  width: 100%; 
+.message-field {
+  background: #fff;
+  border: 1px solid #c1c1c1;
+  overflow: auto; /* adds scrollbars only when necessary */
+  height: 550px;
+  border-radius: 5px;
 }
 
 
@@ -92,49 +72,53 @@ border-radius: 5px;
 }
 
 .chat {
-    list-style: none;
-    margin: 0;
-    padding: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 8px;
 }
 
-
 .chat-btn {
-    text-align: center;
+  text-align: center;
 }
 
 @keyframes hide {
-    0% {
-        opacity: 1;
-    }                
-    100% {
-        opacity: 0;
-    }
-   }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 
-.chat-body{
-    animation-name: hide;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
-    animation-play-state: paused;
+.chat-body {
+  animation-name: hide;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
 }
 
 .back {
-    transition: .3s all ease-in;
+  transition: 0.3s all ease-in;
 }
 
-.back:hover, .back:focus {
-    box-shadow: 0px 0px 2px 2px #28a745;
+.back:hover,
+.back:focus {
+  box-shadow: 0px 0px 2px 2px #28a745;
 }
 
 .chat-btn:after {
-    content: '';
-    display: block;
-    clear: both;
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.chat-title{
+.chat-title {
   font-size: 24px;
   text-transform: uppercase;
   font-weight: bold;
+}
 
+
+.header .close {
+    line-height: 0.7;
 }

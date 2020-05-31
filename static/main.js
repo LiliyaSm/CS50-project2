@@ -1,7 +1,7 @@
-// username = localStorage.getItem("username");
 
+//redirect to the last chat
 if (localStorage.getItem("lastChat")) {
-  window.location.href = `/chat?chatname=${localStorage.getItem("lastChat")}`;
+  window.location.href = `/chat/${localStorage.getItem("lastChat")}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

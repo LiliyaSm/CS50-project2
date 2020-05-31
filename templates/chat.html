@@ -2,7 +2,6 @@
   <script>
     localStorage.setItem("username", "{{username}}") 
     localStorage.setItem("lastChat", "{{chatname}}") 
-    console.log(localStorage)
   </script>  
 
 <script id="result" type="text/template">
@@ -12,7 +11,7 @@
             {{#if values.delete}}
     
             <button type="button" class="close ml-2" aria-label="Close">
-            <span class="close" aria-hidden="true">&times;</span>
+            <span class="delete" aria-hidden="true">&times;</span>
             </button>
     
             {{/if}}

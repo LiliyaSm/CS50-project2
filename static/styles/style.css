@@ -1,7 +1,7 @@
 body {
   font-family: "Tahoma", sans-serif;
   min-height: 100vh;
-  background-color: #CFF09E; }
+  background-color: #cff09e; }
 
 .hide {
   display: none; }
@@ -16,7 +16,7 @@ body {
   padding: 2%; }
 
 .site-header {
-  background-color: #3B8686;
+  background-color: #3b8686;
   font-weight: bold; }
   .site-header img {
     border-radius: 50%; }
@@ -35,13 +35,10 @@ body {
 .form-group .form-control.username {
   flex: 2; }
 
-.form-group .form-control.username {
-  flex: 2; }
-
 .btn-join {
   color: #fff;
-  background-color: #3B8686;
-  border-color: #3B8686; }
+  background-color: #3b8686;
+  border-color: #3b8686; }
 
 .cards {
   max-width: 824px;
@@ -49,14 +46,11 @@ body {
 
 .message-field {
   background: #fff;
-  border: 1px solid #C1C1C1;
+  border: 1px solid #c1c1c1;
   overflow: auto;
   /* adds scrollbars only when necessary */
   height: 550px;
   border-radius: 5px; }
-
-.message-group {
-  width: 100%; }
 
 .chat li {
   margin: 15px 0; }
@@ -82,13 +76,14 @@ body {
   animation-play-state: paused; }
 
 .back {
-  transition: .3s all ease-in; }
+  transition: 0.3s all ease-in; }
 
-.back:hover, .back:focus {
+.back:hover,
+.back:focus {
   box-shadow: 0px 0px 2px 2px #28a745; }
 
 .chat-btn:after {
-  content: '';
+  content: "";
   display: block;
   clear: both; }
 
@@ -96,3 +91,6 @@ body {
   font-size: 24px;
   text-transform: uppercase;
   font-weight: bold; }
+
+.header .close {
+  line-height: 0.7; }
